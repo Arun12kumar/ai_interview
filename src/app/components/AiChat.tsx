@@ -206,23 +206,18 @@ export function AiChat() {
       <aside className="flex flex-col shrink-0 h-full border-r border-white/[.08]" style={{ width: 261 }}>
 
         {/* Logo — extra top padding so toggle pill doesn't overlap */}
-        <div className="flex items-center justify-between px-5 pt-16 pb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center size-7 rounded-full bg-white/10 shrink-0">
-               <Target className="size-4 text-white/90" />
-            </div>
-            <span
-              className="text-white text-[19px] tracking-tight font-medium"
-            >
-              Zyricon
-            </span>
-          </div>
-          <Button variant="ghost" size="icon" className="size-8 text-white/50 hover:text-white hover:bg-white/10 rounded-md">
-            <Sidebar className="size-4.5" />
-          </Button>
+        <div className="flex items-center gap-3 px-5 pt-16 pb-5">
+          <Brain className="size-7 text-white/90 shrink-0" />
+          <span
+            className="text-white text-2xl tracking-tight"
+            style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
+          >
+            <span style={{ fontStyle: "normal" }}>AI</span>
+            <span style={{ fontStyle: "italic" }}> Interview</span>
+          </span>
         </div>
 
-        <Separator className="mx-5 w-auto bg-transparent border-t border-white/[.08] mt-2 mb-2" />
+        <Separator className="mx-5 w-auto bg-white/[.08]" />
 
         {/* New Chat */}
         <div className="px-4 py-2">
@@ -350,20 +345,11 @@ export function AiChat() {
           </div>
         </ScrollArea>
 
-        {/* Premium Upgrade */}
-        <div className="px-5 pb-6 mt-auto">
-          <div className="relative overflow-hidden rounded-[20px] bg-white/[.04] p-4.5 border border-white/10 flex flex-col items-center text-center">
-             <div className="size-8 rounded-full bg-white/10 flex items-center justify-center mb-3">
-               <Crown className="size-[18px] text-white/90" />
-             </div>
-             <h4 className="text-[14px] font-medium text-white mb-2">Upgrade to premium</h4>
-             <p className="text-[11.5px] text-white/50 leading-[1.6] mb-4 max-w-[180px]">
-               Boost productivity with seamless automation and responsive AI, built to adapt to your needs.
-             </p>
-             <Button className="w-full rounded-[14px] bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-none text-[13px] h-9 transition-colors">
-               Upgrade
-             </Button>
-          </div>
+        {/* Stats */}
+        <div className="flex items-center gap-2 px-5 py-5 mt-auto">
+          <StatBadge icon={<Brain />} value="0" />
+          <StatBadge icon={<Zap />} value="12" />
+          <StatBadge icon={<MessageSquare />} value="10" />
         </div>
       </aside>
 
