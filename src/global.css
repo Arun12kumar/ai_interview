@@ -180,4 +180,33 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+
+  /* ── Mobile touch performance ── */
+  button, [role="button"], a, [tabindex] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* GPU-promote overlays & animated panels to avoid paint on main thread */
+  [data-sidebar-overlay], [data-sidebar-panel] {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* ── Custom Scrollbar ── */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Brain,
   MessageSquare,
+  MessageSquarePlus,
   Plus,
   Zap,
   Trash2,
@@ -17,6 +18,7 @@ import {
   Sidebar,
   Target,
   Bell,
+  History,
   LogOut,
   User,
 } from "lucide-react";
@@ -41,11 +43,29 @@ import { cn } from "./ui/utils";
 /* ─── Constants ─────────────────────────────────────────────────────── */
 const AVATAR_SRC = "figma:asset/e5f0f2d7139f813f1a88a42e4e0de996589f0f91.png";
 
-const CHAT_SESSIONS = [
-  { id: 1, title: "Django vs FastAPI comparison" },
-  { id: 2, title: "React vs Vue performance" },
-  { id: 3, title: "System design principles" },
-  { id: 4, title: "TypeScript best practices" },
+const CHAT_HISTORY = [
+  {
+    group: "Today",
+    chats: [
+      { id: 101, title: "Django vs FastAPI comparison", time: "10:30 AM" },
+      { id: 102, title: "React vs Vue performance metrics", time: "09:15 AM" },
+    ],
+  },
+  {
+    group: "Yesterday",
+    chats: [
+      { id: 103, title: "System design principles and best practices for scaling", time: "04:45 PM" },
+      { id: 104, title: "TypeScript advanced types", time: "02:20 PM" },
+      { id: 105, title: "Next.js server components", time: "11:10 AM" },
+    ],
+  },
+  {
+    group: "Jan 28, 2026",
+    chats: [
+      { id: 106, title: "GraphQL vs REST architectures", time: "03:00 PM" },
+      { id: 107, title: "Docker containerization guide", time: "01:30 PM" },
+    ],
+  },
 ];
 
 const MESSAGES = [
@@ -158,6 +178,44 @@ function NavItem({ icon: Icon, label, isActive, onClick, isSidebarOpen }: { icon
   );
 }
 
+/* ─── History Item ──────────────────────────────────────────────────── */
+function HistoryItem({ title, time, isActive, onClick, isSidebarOpen }: { title: string, time: string, isActive: boolean, onClick: () => void, isSidebarOpen: boolean }) {
+  return (
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          onClick={onClick}
+          className={cn(
+            "rounded-xl transition-all h-auto",
+            isSidebarOpen ? "w-full justify-between gap-3 px-3 py-2 text-[13px]" : "size-11 p-0 justify-center mx-auto",
+            isActive
+              ? "text-white bg-white/[.07]"
+              : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
+          )}
+        >
+          {isSidebarOpen ? (
+            <div className="flex flex-col items-start min-w-0 flex-1">
+              <span className="truncate w-full text-left font-normal">{title}</span>
+              <span className="text-[11.5px] text-white/40 mt-0.5">{time}</span>
+            </div>
+          ) : (
+            <MessageSquare className="size-4 shrink-0 opacity-80" />
+          )}
+        </Button>
+      </TooltipTrigger>
+      {!isSidebarOpen && (
+        <TooltipContent side="right">
+          <div className="flex flex-col gap-0.5">
+            <span>{title}</span>
+            <span className="text-[10px] text-white/50">{time}</span>
+          </div>
+        </TooltipContent>
+      )}
+    </Tooltip>
+  );
+}
+
 /* ─── Avatar ────────────────────────────────────────────────────────── */
 function AIAvatar() {
   const [errored, setErrored] = useState(false);
@@ -222,6 +280,7 @@ export function AiChat() {
   const [activeChat, setActiveChat] = useState(1);
   const [recording, setRecording] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(typeof window !== 'undefined' && window.innerWidth >= 768);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -239,19 +298,28 @@ export function AiChat() {
       {/* ── Mobile Sidebar Overlay ── */}
       <div 
         className={cn(
-          "fixed inset-0 bg-black/60 z-30 md:hidden transition-opacity duration-300",
+          "fixed inset-0 bg-black/60 z-30 md:hidden transition-opacity duration-200",
           isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
+        style={{ touchAction: "none", WebkitTapHighlightColor: "transparent" }}
         onClick={() => setIsSidebarOpen(false)}
+        onTouchEnd={(e) => { e.preventDefault(); setIsSidebarOpen(false); }}
       />
 
       {/* ── Sidebar ── */}
       <aside 
         className={cn(
-          "flex flex-col shrink-0 h-full border-r border-white/[.08] transition-all duration-300 ease-in-out z-40 overflow-hidden",
+          "flex flex-col shrink-0 h-full border-r border-white/[.08] z-40 overflow-hidden",
           "absolute md:relative bg-[#211825] md:bg-transparent",
           isSidebarOpen ? "translate-x-0 w-[261px]" : "-translate-x-full md:translate-x-0 w-[68px]"
         )}
+        style={{
+          transition: "transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94), width 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          willChange: "transform, width",
+          transform: isSidebarOpen ? "translate3d(0,0,0)" : undefined,
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
       >
         <div className={cn("flex flex-col h-full", isSidebarOpen ? "w-[261px]" : "w-[68px]")}>
           {/* Logo — extra top padding so toggle pill doesn't overlap */}
@@ -299,7 +367,7 @@ export function AiChat() {
                     isSidebarOpen ? "w-full justify-start gap-3 px-4 py-3 h-auto" : "justify-center p-0 size-[44px]"
                   )}
                 >
-                  <MessageSquare className={cn("opacity-80 shrink-0", isSidebarOpen ? "size-[18px]" : "size-5")} />
+                  <MessageSquarePlus className={cn("opacity-80 shrink-0", isSidebarOpen ? "size-[18px]" : "size-5")} />
                   {isSidebarOpen && <span className="font-normal text-[14.5px]">New Chat</span>}
                 </Button>
               </TooltipTrigger>
@@ -319,7 +387,75 @@ export function AiChat() {
                   </div>
                 )}
                 <nav className={cn("space-y-0.5", !isSidebarOpen && "w-full flex flex-col items-center gap-1")}>
-                  <NavItem icon={MessageSquare} label="Chat" isActive={activeChat === 1} onClick={() => setActiveChat(1)} isSidebarOpen={isSidebarOpen} />
+                  {/* Chat Dropdown */}
+                  <div className="w-full flex flex-col">
+                    <Tooltip delayDuration={0}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            if (!isSidebarOpen) {
+                              setIsSidebarOpen(true);
+                              setIsHistoryOpen(true);
+                            } else {
+                              setIsHistoryOpen(!isHistoryOpen);
+                            }
+                          }}
+                          className={cn(
+                            "rounded-xl transition-all h-auto",
+                            isSidebarOpen ? "w-full justify-between gap-3 px-4 py-2.5 text-[14px]" : "size-11 p-0 justify-center mx-auto",
+                            (activeChat >= 100 || activeChat === 1)
+                              ? "text-white bg-white/[.07]"
+                              : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
+                          )}
+                        >
+                          <div className={cn("flex items-center", isSidebarOpen ? "gap-3.5" : "")}>
+                            <History className="size-4 shrink-0 opacity-80" />
+                            {isSidebarOpen && <span className="font-normal text-left truncate">Chat</span>}
+                          </div>
+                          {isSidebarOpen && (
+                            <ChevronDown className={cn("size-4 text-white/40 transition-transform", isHistoryOpen && "rotate-180")} />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      {!isSidebarOpen && <TooltipContent side="right">Chat</TooltipContent>}
+                    </Tooltip>
+
+                    {/* Chat History Dropdown Content */}
+                    <div
+                      className={cn(
+                        "grid transition-all duration-200 ease-in-out",
+                        isHistoryOpen && isSidebarOpen ? "grid-rows-[1fr] opacity-100 mt-1" : "grid-rows-[0fr] opacity-0"
+                      )}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="max-h-[130px] md:max-h-[35vh] overflow-y-auto w-full custom-scrollbar pr-1">
+                          <div className="pl-3 pr-2 py-1 flex flex-col gap-3">
+                            {CHAT_HISTORY.map((group, idx) => (
+                              <div key={idx} className="w-full">
+                                <div className="px-2 pb-1.5 pt-1 text-[11px] font-medium text-white/40 tracking-wide uppercase">
+                                  {group.group}
+                                </div>
+                                <nav className="space-y-0.5">
+                                  {group.chats.map((chat) => (
+                                    <HistoryItem 
+                                      key={chat.id} 
+                                      title={chat.title} 
+                                      time={chat.time} 
+                                      isActive={activeChat === chat.id} 
+                                      onClick={() => setActiveChat(chat.id)} 
+                                      isSidebarOpen={isSidebarOpen} 
+                                    />
+                                  ))}
+                                </nav>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <NavItem icon={Archive} label="Archived" isActive={activeChat === 2} onClick={() => setActiveChat(2)} isSidebarOpen={isSidebarOpen} />
                   <NavItem icon={Library} label="Library" isActive={activeChat === 3} onClick={() => setActiveChat(3)} isSidebarOpen={isSidebarOpen} />
                 </nav>
@@ -362,6 +498,7 @@ export function AiChat() {
               size="icon"
               onClick={() => setIsSidebarOpen(true)}
               className="md:hidden size-9 text-white/60 hover:text-white hover:bg-white/10 rounded-lg shrink-0 mr-1"
+              style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
             >
               <Sidebar className="size-5" />
             </Button>
@@ -412,7 +549,11 @@ export function AiChat() {
             {/* User Profile Pill */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div role="button" className="flex items-center gap-2 sm:gap-3 p-1 sm:pr-4 pr-1 bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] transition-all rounded-full cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-white/20">
+                <div
+                  role="button"
+                  className="flex items-center gap-2 sm:gap-3 p-1 sm:pr-4 pr-1 bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] transition-colors rounded-full cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+                >
                   <div className="size-[30px] rounded-full overflow-hidden border border-white/20 bg-white/10 shrink-0 flex items-center justify-center">
                     <User className="size-4.5 text-white/90" />
                   </div>
