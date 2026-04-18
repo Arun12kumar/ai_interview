@@ -183,7 +183,7 @@ function LayerBlock({ layer, isLast }: { layer: ArchLayer; isLast: boolean }) {
           </span>
         </div>
         {/* Node grid */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
           {layer.nodes.map((n) => (
             <NodeCard key={n.label} node={n} accentColor={layer.accentColor} />
           ))}
@@ -227,11 +227,11 @@ export function SystemDesign() {
       }}
     >
       <ScrollArea className="h-full">
-        <div className="max-w-[1100px] mx-auto px-8 pt-20 pb-14">
+        <div className="max-w-[1100px] mx-auto px-4 md:px-8 pt-8 md:pt-20 pb-10 md:pb-14">
 
           {/* ── Breadcrumb + Heading ── */}
-          <div className="mb-14">
-            <div className="flex items-center gap-3 mb-3">
+          <div className="mb-8 md:mb-14">
+            <div className="flex items-center gap-2 md:gap-3 mb-3">
               <div className="flex items-center gap-2">
                 <Brain className="size-[18px] text-white/50" />
                 <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-white/50">
@@ -245,8 +245,8 @@ export function SystemDesign() {
             </div>
 
             <h1
-              className="text-white mb-2"
-              style={{ fontFamily: "Playfair Display, serif", fontSize: 42, fontWeight: 400, lineHeight: 1.2 }}
+              className="text-white mb-2 text-3xl md:text-[42px]"
+              style={{ fontFamily: "Playfair Display, serif", fontWeight: 400, lineHeight: 1.2 }}
             >
               Architecture Overview
             </h1>
@@ -258,7 +258,7 @@ export function SystemDesign() {
 
           {/* ── Tabs (shadcn/ui) ── */}
           <Tabs defaultValue="arch">
-            <TabsList className="mb-8 h-auto p-1 gap-1 bg-white/[.06] border border-white/[.08] rounded-2xl w-fit">
+            <TabsList className="mb-6 md:mb-8 h-auto p-1 gap-1 bg-white/[.06] border border-white/[.08] rounded-2xl w-full md:w-fit flex-wrap">
               {[
                 { value: "arch",       label: "Architecture" },
                 { value: "flow",       label: "Data Flow" },
@@ -304,7 +304,7 @@ export function SystemDesign() {
             <TabsContent value="flow">
               <div className="max-w-[680px] space-y-5">
                 {/* Steps card */}
-                <div className="rounded-[21px] p-8 bg-white/[.04] border border-white/[.08]">
+                <div className="rounded-[21px] p-5 md:p-8 bg-white/[.04] border border-white/[.08]">
                   <h2
                     className="text-white mb-2"
                     style={{ fontFamily: "Playfair Display, serif", fontSize: 26, fontWeight: 400 }}
@@ -333,9 +333,9 @@ export function SystemDesign() {
                 </div>
 
                 {/* API contracts */}
-                <div className="rounded-[21px] p-8 bg-white/[.04] border border-white/[.08]">
+                <div className="rounded-[21px] p-5 md:p-8 bg-white/[.04] border border-white/[.08]">
                   <h3
-                    className="text-white mb-5 text-lg"
+                    className="text-white mb-5 text-[1.125rem] md:text-lg"
                     style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
                   >
                     Key API Contracts
@@ -347,7 +347,7 @@ export function SystemDesign() {
                         className="flex items-center gap-3 p-3 rounded-[10px] bg-white/[.04] border border-white/[.06]"
                       >
                         <Badge
-                          className="shrink-0 rounded-md text-[11px] font-semibold font-mono"
+                          className="shrink-0 rounded-md text-[10px] md:text-[11px] font-semibold font-mono"
                           style={{
                             backgroundColor: `${api.color}22`,
                             color: api.color,
@@ -356,8 +356,8 @@ export function SystemDesign() {
                         >
                           {api.method}
                         </Badge>
-                        <code className="text-[#D5CFDA] text-[13px] font-mono shrink-0">{api.route}</code>
-                        <span className="text-[#EAE7EC]/45 text-xs truncate">{api.desc}</span>
+                        <code className="text-[#D5CFDA] text-[12px] md:text-[13px] font-mono shrink-0">{api.route}</code>
+                        <span className="text-[#EAE7EC]/45 text-[10px] md:text-xs truncate">{api.desc}</span>
                       </div>
                     ))}
                   </div>
@@ -385,10 +385,10 @@ export function SystemDesign() {
                 </div>
 
                 {/* Golden ratio visualiser */}
-                <div className="rounded-[21px] p-8 bg-white/[.04] border border-white/[.08]">
+                <div className="rounded-[21px] p-5 md:p-8 bg-white/[.04] border border-white/[.08]">
                   <h3
-                    className="text-white mb-2"
-                    style={{ fontFamily: "Playfair Display, serif", fontSize: 21, fontWeight: 400 }}
+                    className="text-white mb-2 text-[1.125rem] md:text-[21px]"
+                    style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
                   >
                     Golden Ratio Application
                   </h3>
@@ -418,11 +418,11 @@ export function SystemDesign() {
                   </div>
 
                   {/* Fibonacci spacing bar chart */}
-                  <div className="mb-5">
+                  <div className="mb-5 md:mb-8 overflow-x-auto pb-2">
                     <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
                       Fibonacci Spacing Scale
                     </p>
-                    <div className="flex items-end gap-1.5">
+                    <div className="flex items-end gap-1.5 min-w-max">
                       {[5, 8, 13, 21, 34, 55, 89].map((s) => (
                         <div key={s} className="flex flex-col items-center gap-1.5">
                           <span className="text-[10px] text-white/40">{s}px</span>

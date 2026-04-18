@@ -181,13 +181,9 @@ function MessageBubble({ msg }: { msg: (typeof MESSAGES)[number] }) {
 
       <div
         className={cn(
-          "rounded-[21px] px-5 py-4 shadow-[0_15px_33px_rgba(0,0,0,0.10),0_60px_60px_rgba(0,0,0,0.09)]",
-          isAI ? "bg-[#1d1721] text-white" : "bg-white text-[#1a141f]"
+          "rounded-[21px] px-4 md:px-5 py-3 md:py-4 shadow-[0_15px_33px_rgba(0,0,0,0.10),0_60px_60px_rgba(0,0,0,0.09)]",
+          isAI ? "bg-[#1d1721] text-white max-w-[90%] md:max-w-[55.9%]" : "bg-white text-[#1a141f] max-w-[90%] md:max-w-[38.2%]"
         )}
-        style={{
-          /* φ-based widths: AI 55.9%, User 38.2% */
-          maxWidth: isAI ? "55.9%" : "38.2%",
-        }}
       >
         {"title" in msg && msg.title && (
           <p className="mb-2 text-sm font-medium leading-snug">{msg.title}</p>
@@ -215,7 +211,7 @@ function MessageBubble({ msg }: { msg: (typeof MESSAGES)[number] }) {
 export function AiChat() {
   const [activeChat, setActiveChat] = useState(1);
   const [recording, setRecording] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(typeof window !== 'undefined' && window.innerWidth >= 768);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -230,11 +226,21 @@ export function AiChat() {
           "linear-gradient(234.318deg,rgba(145,126,132,.92) 12.773%,rgba(59,43,64,.9) 68.824%,rgb(26,20,31) 100%)",
       }}
     >
+      {/* ── Mobile Sidebar Overlay ── */}
+      <div 
+        className={cn(
+          "fixed inset-0 bg-black/60 z-30 md:hidden transition-opacity duration-300",
+          isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setIsSidebarOpen(false)}
+      />
+
       {/* ── Sidebar ── */}
       <aside 
         className={cn(
-          "flex flex-col shrink-0 h-full border-r border-white/[.08] transition-all duration-300 ease-in-out relative overflow-hidden",
-          isSidebarOpen ? "w-[261px]" : "w-[68px]"
+          "flex flex-col shrink-0 h-full border-r border-white/[.08] transition-all duration-300 ease-in-out z-40 overflow-hidden",
+          "absolute md:relative bg-[#211825] md:bg-transparent",
+          isSidebarOpen ? "translate-x-0 w-[261px]" : "-translate-x-full md:translate-x-0 w-[68px]"
         )}
       >
         <div className={cn("flex flex-col h-full", isSidebarOpen ? "w-[261px]" : "w-[68px]")}>
@@ -336,10 +342,18 @@ export function AiChat() {
       </aside>
 
       {/* ── Main ── */}
-      <main className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
+      <main className="flex flex-col flex-1 min-w-0 h-full overflow-hidden relative">
 
         {/* Header — extra top padding so toggle pill clears */}
-        <header className="flex items-center gap-2 px-8 pt-5 pb-5">
+        <header className="flex items-center gap-2 px-4 md:px-8 pt-4 md:pt-5 pb-3 md:pb-5">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSidebarOpen(true)}
+            className="md:hidden size-9 text-white/60 hover:text-white hover:bg-white/10 rounded-lg shrink-0 mr-1"
+          >
+            <Sidebar className="size-5" />
+          </Button>
           <Button
             variant="ghost"
             className="gap-2 px-1 text-white hover:bg-white/10 group"
@@ -355,8 +369,8 @@ export function AiChat() {
         </header>
 
         {/* Messages */}
-        <ScrollArea className="flex-1 px-8">
-          <div className="space-y-5 py-2 pb-4">
+        <ScrollArea className="flex-1 min-h-0 px-4 md:px-8">
+          <div className="space-y-4 md:space-y-5 py-2 pb-4">
             {MESSAGES.map((msg) => (
               <MessageBubble key={msg.id} msg={msg} />
             ))}
@@ -365,12 +379,12 @@ export function AiChat() {
         </ScrollArea>
 
         {/* Waveform */}
-        <div className="flex justify-center px-8 py-2">
+        <div className="flex justify-center px-4 md:px-8 py-2">
           <Waveform active={recording} />
         </div>
 
         {/* Action bar ── centred, max 580px, Fibonacci px spacing */}
-        <div className="flex items-center justify-between pb-8 pt-2 px-14 mx-auto w-full max-w-[580px]">
+        <div className="flex items-center justify-between pb-6 md:pb-8 pt-2 px-6 md:px-14 mx-auto w-full max-w-[580px]">
           {/* Delete */}
           <Tooltip>
             <TooltipTrigger asChild>
