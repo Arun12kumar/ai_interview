@@ -220,7 +220,7 @@ function FlowStep({ step, isLast }: { step: (typeof DATA_FLOW)[number]; isLast: 
 export function SystemDesignPage() {
   return (
       <ScrollArea className="h-full">
-        <div className="max-w-[1100px] mx-auto px-4 md:px-8 pt-8 md:pt-20 pb-10 md:pb-14">
+        <div className="max-w-[1100px] mx-1 md:mx-10 px-4 md:px-8 pt-8 md:pt-5 pb-10 md:pb-14">
 
           {/* ── Breadcrumb + Heading ── */}
           <div className="mb-8 md:mb-14">

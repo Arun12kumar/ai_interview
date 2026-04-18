@@ -117,8 +117,10 @@ function MessageBubble({ msg }: { msg: (typeof MESSAGES)[number] }) {
 
       <div
         className={cn(
-          "rounded-[21px] px-4 md:px-7 py-3 md:py-5 shadow-[0_15px_33px_rgba(0,0,0,0.10),0_60px_60px_rgba(0,0,0,0.09)]",
-          isAI ? "bg-[#1d1721] text-white max-w-[90%] md:max-w-[55.9%]" : "bg-white text-[#1a141f] max-w-[90%] md:max-w-[38.2%]"
+          "rounded-[21px] px-4 md:px-7 py-3 md:py-5 backdrop-blur-md shadow-[0_15px_33px_rgba(0,0,0,0.10),0_60px_60px_rgba(0,0,0,0.09)]",
+          isAI 
+            ? "bg-[#1d1721]/70 border border-white/[.08] text-white max-w-[90%] md:max-w-[55.9%]" 
+            : "bg-white/[.12] border border-white/[.15] text-white max-w-[90%] md:max-w-[38.2%]"
         )}
       >
         {"title" in msg && msg.title && (
