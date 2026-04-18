@@ -16,6 +16,9 @@ import {
   Crown,
   Sidebar,
   Target,
+  Bell,
+  LogOut,
+  User,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -26,6 +29,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "./ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { cn } from "./ui/utils";
 
 /* ─── Constants ─────────────────────────────────────────────────────── */
@@ -345,27 +355,83 @@ export function AiChat() {
       <main className="flex flex-col flex-1 min-w-0 h-full overflow-hidden relative">
 
         {/* Header — extra top padding so toggle pill clears */}
-        <header className="flex items-center gap-2 px-4 md:px-8 pt-4 md:pt-5 pb-3 md:pb-5">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsSidebarOpen(true)}
-            className="md:hidden size-9 text-white/60 hover:text-white hover:bg-white/10 rounded-lg shrink-0 mr-1"
-          >
-            <Sidebar className="size-5" />
-          </Button>
-          <Button
-            variant="ghost"
-            className="gap-2 px-1 text-white hover:bg-white/10 group"
-          >
-            <span
-              className="text-xl tracking-tight"
-              style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
+        <header className="flex items-center justify-between px-4 md:px-8 pt-4 md:pt-5 pb-3 md:pb-5">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden size-9 text-white/60 hover:text-white hover:bg-white/10 rounded-lg shrink-0 mr-1"
             >
-              Chat
-            </span>
-            <ChevronDown className="size-5 text-white/60 group-hover:text-white/90 transition-colors" />
-          </Button>
+              <Sidebar className="size-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              className="gap-2 px-1 text-white hover:bg-white/10 group"
+            >
+              <span
+                className="text-xl tracking-tight"
+                style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
+              >
+                Chat
+              </span>
+              <ChevronDown className="size-5 text-white/60 group-hover:text-white/90 transition-colors" />
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Notification */}
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="size-[38px] bg-white/[.05] border border-white/[.08] text-white/80 hover:text-white hover:bg-white/[.12] rounded-full relative shrink-0 transition-colors shadow-sm"
+                >
+                  <Bell className="size-4" strokeWidth={2.5} />
+                  <span className="absolute top-[8px] right-[8px] size-2 bg-[#F24C4C] rounded-full border border-[#2b2132] shadow-sm animate-pulse" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Notifications</TooltipContent>
+            </Tooltip>
+
+            {/* Logout */}
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="size-[38px] bg-white/[.05] border border-white/[.08] text-white/80 hover:text-red-300 hover:bg-red-500/15 hover:border-red-500/30 rounded-full shrink-0 transition-colors shadow-sm"
+                >
+                  <LogOut className="size-4" strokeWidth={2.5} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Log out</TooltipContent>
+            </Tooltip>
+
+            {/* User Profile Pill */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div role="button" className="flex items-center gap-2 sm:gap-3 p-1 sm:pr-4 pr-1 bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] transition-all rounded-full cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-white/20">
+                  <div className="size-[30px] rounded-full overflow-hidden border border-white/20 bg-white/10 shrink-0 flex items-center justify-center">
+                    <User className="size-4.5 text-white/90" />
+                  </div>
+                  <div className="flex-col justify-center hidden sm:flex">
+                    <span className="text-[13px] font-medium text-white/90 leading-tight">arun@ai-interview.io</span>
+                    <span className="text-[11px] text-white/50 leading-tight">Administrator</span>
+                  </div>
+                  <ChevronDown className="size-3.5 text-white/40 hidden sm:block shrink-0" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px] border-white/10 bg-[#1d1721] text-white rounded-[13px] shadow-xl">
+                <div className="px-3 py-2.5 sm:hidden">
+                  <p className="text-[13px] font-medium text-white/90">arun@ai-interview.io</p>
+                  <p className="text-[11px] text-white/50 mt-0.5">Administrator</p>
+                </div>
+
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
 
         {/* Messages */}
