@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 
@@ -7,6 +7,13 @@ export function MainLayout() {
   const [activeChat, setActiveChat] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(typeof window !== 'undefined' && window.innerWidth >= 768);
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
+  const location = useLocation();
+
+  const getPageTitle = () => {
+    if (location.pathname.includes("/system")) return "System Design";
+    if (location.pathname.includes("/new")) return "New Interview";
+    return "Interview Chat";
+  };
 
   return (
     <div
@@ -25,7 +32,7 @@ export function MainLayout() {
         setIsHistoryOpen={setIsHistoryOpen}
       />
       <main className="flex flex-col flex-1 min-w-0 h-full overflow-hidden relative">
-        <Header setIsSidebarOpen={setIsSidebarOpen} title="Chat" />
+        <Header setIsSidebarOpen={setIsSidebarOpen} title={getPageTitle()} />
         <div className="flex-1 overflow-hidden relative flex flex-col">
           <Outlet context={{ setIsSidebarOpen }} />
         </div>

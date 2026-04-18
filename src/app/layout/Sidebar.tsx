@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import {
   Brain,
   MessageSquare,
@@ -76,7 +76,7 @@ function NavItem({ icon: Icon, label, isActive, onClick, isSidebarOpen }: { icon
             "rounded-xl transition-all h-auto",
             isSidebarOpen ? "w-full justify-start gap-3.5 px-4 py-2.5 text-[14px]" : "size-11 p-0 justify-center mx-auto",
             isActive
-              ? "text-white bg-white/[.07]"
+              ? "bg-white text-[#1d1721] font-medium shadow-sm"
               : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
           )}
         >
@@ -100,14 +100,14 @@ function HistoryItem({ title, time, isActive, onClick, isSidebarOpen }: { title:
             "rounded-xl transition-all h-auto",
             isSidebarOpen ? "w-full justify-between gap-3 px-3 py-2 text-[13px]" : "size-11 p-0 justify-center mx-auto",
             isActive
-              ? "text-white bg-white/[.07]"
+              ? "bg-white text-[#1d1721] shadow-sm font-medium"
               : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
           )}
         >
           {isSidebarOpen ? (
             <div className="flex flex-col items-start min-w-0 flex-1">
-              <span className="truncate w-full text-left font-normal">{title}</span>
-              <span className="text-[11.5px] text-white/40 mt-0.5">{time}</span>
+              <span className={cn("truncate w-full text-left", !isActive && "font-normal")}>{title}</span>
+              <span className={cn("text-[11.5px] mt-0.5", isActive ? "text-[#1d1721]/60" : "text-white/40")}>{time}</span>
             </div>
           ) : (
             <MessageSquare className="size-4 shrink-0 opacity-80" />
@@ -144,6 +144,7 @@ export function Sidebar({
   setIsHistoryOpen
 }: SidebarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -210,8 +211,9 @@ export function Sidebar({
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
+                  onClick={() => { setActiveChat(4); navigate("/new"); }}
                   className={cn(
-                    "rounded-xl bg-white/[.12] text-white hover:bg-white/[.16] shadow-none transition-all",
+                    "rounded-xl bg-white/[.12] text-white hover:bg-white/[.16] hover:text-white shadow-none transition-all",
                     isSidebarOpen ? "w-full justify-start gap-3 px-4 py-3 h-auto" : "justify-center p-0 size-[44px]"
                   )}
                 >
@@ -253,8 +255,8 @@ export function Sidebar({
                           className={cn(
                             "rounded-xl transition-all h-auto",
                             isSidebarOpen ? "w-full justify-between gap-3 px-4 py-2.5 text-[14px]" : "size-11 p-0 justify-center mx-auto",
-                            (activeChat >= 100 || activeChat === 1)
-                              ? "text-white bg-white/[.07]"
+                            location.pathname.includes('/chat')
+                              ? "bg-white text-[#1d1721] font-medium shadow-sm"
                               : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
                           )}
                         >
@@ -263,7 +265,7 @@ export function Sidebar({
                             {isSidebarOpen && <span className="font-normal text-left truncate">Chat</span>}
                           </div>
                           {isSidebarOpen && (
-                            <ChevronDown className={cn("size-4 text-white/40 transition-transform", isHistoryOpen && "rotate-180")} />
+                            <ChevronDown className={cn("size-4 text-inherit opacity-60 transition-transform", isHistoryOpen && "rotate-180")} />
                           )}
                         </Button>
                       </TooltipTrigger>
@@ -292,7 +294,7 @@ export function Sidebar({
                                       title={chat.title} 
                                       time={chat.time} 
                                       isActive={activeChat === chat.id} 
-                                      onClick={() => setActiveChat(chat.id)} 
+                                      onClick={() => { setActiveChat(chat.id); navigate("/chat"); }} 
                                       isSidebarOpen={isSidebarOpen} 
                                     />
                                   ))}
@@ -307,7 +309,7 @@ export function Sidebar({
 
                   <NavItem icon={Archive} label="Archived" isActive={activeChat === 2} onClick={() => setActiveChat(2)} isSidebarOpen={isSidebarOpen} />
                   <NavItem icon={Library} label="Library" isActive={activeChat === 3} onClick={() => setActiveChat(3)} isSidebarOpen={isSidebarOpen} />
-                  <NavItem icon={Target} label="System Design" isActive={activeChat === 6} onClick={() => { setActiveChat(6); navigate("/system"); }} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Target} label="System Design" isActive={location.pathname.includes("/system")} onClick={() => { setActiveChat(6); navigate("/system"); }} isSidebarOpen={isSidebarOpen} />
                 </nav>
               </div>
 

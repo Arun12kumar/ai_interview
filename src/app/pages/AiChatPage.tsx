@@ -28,11 +28,13 @@ const MESSAGES = [
       "Django = best when you need a complete web platform, not just an API",
       "FastAPI = best when performance and developer ergonomics for APIs matter most — it's quickly becoming the go-to for modern Python API development",
     ],
+    time: "03:10:05 PM",
   },
   {
     id: 2,
     role: "user" as const,
     text: "command is the most reliable terminal approach and works across desktop",
+    time: "03:11:15 PM",
   },
   {
     id: 3,
@@ -42,11 +44,13 @@ const MESSAGES = [
       "Django = best when you need a complete web platform, not just an API",
       "FastAPI = best when performance and developer ergonomics for APIs matter most — it's quickly becoming the go-to for modern Python API development",
     ],
+    time: "03:12:10 PM",
   },
   {
     id: 4,
     role: "user" as const,
     text: "command is the most reliable terminal approach and works across desktop",
+    time: "03:12:20 PM",
   },
 ];
 
@@ -115,30 +119,35 @@ function MessageBubble({ msg }: { msg: (typeof MESSAGES)[number] }) {
         </div>
       )}
 
-      <div
-        className={cn(
-          "rounded-[21px] px-4 md:px-7 py-3 md:py-5 backdrop-blur-md shadow-[0_15px_33px_rgba(0,0,0,0.10),0_60px_60px_rgba(0,0,0,0.09)]",
-          isAI 
-            ? "bg-[#1d1721]/70 border border-white/[.08] text-white max-w-[90%] md:max-w-[55.9%]" 
-            : "bg-white/[.12] border border-white/[.15] text-white max-w-[90%] md:max-w-[38.2%]"
-        )}
-      >
-        {"title" in msg && msg.title && (
-          <p className="mb-2 text-sm font-medium leading-snug">{msg.title}</p>
-        )}
+      <div className={cn("flex flex-col gap-1.5 max-w-[90%]", isAI ? "md:max-w-[55.9%] items-start" : "md:max-w-[38.2%] items-end")}>
+        <div
+          className={cn(
+            "rounded-[21px] px-4 md:px-7 py-3 md:py-5 backdrop-blur-md shadow-[0_15px_33px_rgba(0,0,0,0.10),0_60px_60px_rgba(0,0,0,0.09)] w-fit",
+            isAI 
+              ? "bg-[#1d1721]/70 border border-white/[.08] text-white" 
+              : "bg-white/[.12] border border-white/[.15] text-white"
+          )}
+        >
+          {"title" in msg && msg.title && (
+            <p className="mb-2 text-sm font-medium leading-snug">{msg.title}</p>
+          )}
 
-        {"bullets" in msg && msg.bullets ? (
-          <ul className="list-disc pl-4 space-y-1.5">
-            {msg.bullets.map((b, i) => (
-              <li key={i} className="text-[15px] leading-relaxed">
-                {b}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          "text" in msg && (
-            <p className="text-[15px] leading-relaxed">{msg.text}</p>
-          )
+          {"bullets" in msg && msg.bullets ? (
+            <ul className="list-disc pl-4 space-y-1.5">
+              {msg.bullets.map((b, i) => (
+                <li key={i} className="text-[15px] leading-relaxed">
+                  {b}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            "text" in msg && (
+              <p className="text-[15px] leading-relaxed">{msg.text}</p>
+            )
+          )}
+        </div>
+        {"time" in msg && msg.time && (
+          <span className="text-[11px] text-white/40 px-2 font-medium tracking-wide">{msg.time}</span>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import { MainLayout } from "./layout/MainLayout";
 import { AiChatPage } from "./pages/AiChatPage";
 import { SystemDesignPage } from "./pages/SystemDesignPage";
+import { NewInterviewPage } from "./pages/NewInterviewPage";
 
 // Simulated Auth Context/State
 const isAuthenticated = true; // In a real app, this comes from a hook like useAuth()
@@ -57,6 +58,8 @@ export default function App() {
           <Route path="chat" element={<AiChatPage />} />
           
           <Route path="system" element={<SystemDesignPage />} />
+
+          <Route path="new" element={<NewInterviewPage />} />
         </Route>
 
         {/* Catch-all 404 Route */}

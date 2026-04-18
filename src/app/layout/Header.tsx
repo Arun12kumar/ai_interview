@@ -23,7 +23,7 @@ interface HeaderProps {
   title?: string;
 }
 
-export function Header({ setIsSidebarOpen, title = "Chat" }: HeaderProps) {
+export function Header({ setIsSidebarOpen, title = "Interview Chat" }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-4 md:px-8 pt-4 md:pt-5 pb-3 md:pb-5">
       <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export function Header({ setIsSidebarOpen, title = "Chat" }: HeaderProps) {
           >
             {title}
           </span>
-          <ChevronDown className="size-5 text-white/60 group-hover:text-white/90 transition-colors" />
+          {/* <ChevronDown className="size-5 text-white/60 group-hover:text-white/90 transition-colors" /> */}
         </Button>
       </div>
 
