@@ -1,28 +1,67 @@
 import React, { useState } from "react";
-import { AiChat } from "./components/AiChat";
-import { SystemDesign } from "./components/SystemDesign";
-import { Button } from "./components/ui/button";
-import { Brain, Layers } from "lucide-react";
-import { cn } from "./components/ui/utils";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { MainLayout } from "./layout/MainLayout";
+import { AiChatPage } from "./pages/AiChatPage";
+import { SystemDesignPage } from "./pages/SystemDesignPage";
 
-type View = "chat" | "system";
+// Simulated Auth Context/State
+const isAuthenticated = true; // In a real app, this comes from a hook like useAuth()
+
+// ── Private Route Wrapper ──
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+}
+
+// ── Public Route Wrapper ──
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <>{children}</>;
+}
 
 export default function App() {
-  const [view, setView] = useState<View>("chat");
-
   return (
-    <div className="relative w-full h-[100dvh] overflow-hidden">
-     
-      {/* ── Chat view ───────────────────────────────────────────────── */}
-      <div
-        className={cn(
-          "absolute inset-0 transition-opacity duration-300",
-          view === "chat" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}
-      >
-        <AiChat />
-      </div>
+    <BrowserRouter>
+      <Routes>
+        {/* ── Public Routes ── */}
+        <Route 
+          path="/login" 
+          element={
+            <PublicRoute>
+              <div className="flex h-[100dvh] w-full items-center justify-center bg-[#1d1721] text-white">
+                <div className="flex flex-col items-center gap-4">
+                  <h1 className="text-3xl font-medium" style={{ fontFamily: "Playfair Display, serif" }}>AI Interview</h1>
+                  <p className="text-white/60">Login Page Placeholder</p>
+                </div>
+              </div>
+            </PublicRoute>
+          } 
+        />
 
-    </div>
+        {/* ── Private Routes (Wrapped in MainLayout) ── */}
+        <Route 
+          path="/" 
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          {/* Default redirect to chat */}
+          <Route index element={<Navigate to="/chat" replace />} />
+          
+          <Route path="chat" element={<AiChatPage />} />
+          
+          <Route path="system" element={<SystemDesignPage />} />
+        </Route>
+
+        {/* Catch-all 404 Route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

@@ -21,11 +21,11 @@ import {
   BarChart2,
   RefreshCw,
 } from "lucide-react";
-import { Badge } from "./ui/badge";
-import { Separator } from "./ui/separator";
-import { ScrollArea } from "./ui/scroll-area";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
-import { cn } from "./ui/utils";
+import { Badge } from "../components/ui/badge";
+import { Separator } from "../components/ui/separator";
+import { ScrollArea } from "../components/ui/scroll-area";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
+import { cn } from "../components/ui/utils";
 
 /* ─── Types ─────────────────────────────────────────────────────────── */
 interface ArchNode {
@@ -149,7 +149,7 @@ const DESIGN_PRINCIPLES = [
 /* ─── Sub-components ─────────────────────────────────────────────────── */
 function NodeCard({ node, accentColor }: { node: ArchNode; accentColor: string }) {
   return (
-    <div className="flex items-start gap-2.5 px-4 py-3 rounded-[13px] bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] hover:border-white/[.16] transition-all cursor-default">
+    <div className="flex items-start gap-3 px-4 py-3.5 rounded-[13px] bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] hover:border-white/[.16] transition-all cursor-default">
       <span className="shrink-0 mt-px" style={{ color: node.color }}>
         {node.icon}
       </span>
@@ -165,7 +165,7 @@ function LayerBlock({ layer, isLast }: { layer: ArchLayer; isLast: boolean }) {
   return (
     <div>
       <div
-        className="rounded-[21px] p-5 border"
+        className="rounded-[21px] p-5 md:p-6 lg:p-8 border"
         style={{
           background: layer.bgColor,
           borderColor: layer.borderColor,
@@ -183,7 +183,7 @@ function LayerBlock({ layer, isLast }: { layer: ArchLayer; isLast: boolean }) {
           </span>
         </div>
         {/* Node grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           {layer.nodes.map((n) => (
             <NodeCard key={n.label} node={n} accentColor={layer.accentColor} />
           ))}
@@ -204,7 +204,7 @@ function LayerBlock({ layer, isLast }: { layer: ArchLayer; isLast: boolean }) {
 
 function FlowStep({ step, isLast }: { step: (typeof DATA_FLOW)[number]; isLast: boolean }) {
   return (
-    <div className="flex items-start gap-4">
+    <div className="flex items-start gap-3 md:gap-4">
       <div className="shrink-0 size-9 rounded-full flex items-center justify-center border border-white/20 bg-white/[.06]">
         <span className="text-[11px] font-semibold text-[#D5CFDA]">{step.step}</span>
       </div>
@@ -217,15 +217,8 @@ function FlowStep({ step, isLast }: { step: (typeof DATA_FLOW)[number]; isLast: 
 }
 
 /* ─── Main Export ─────────────────────────────────────────────────────── */
-export function SystemDesign() {
+export function SystemDesignPage() {
   return (
-    <div
-      className="h-full w-full"
-      style={{
-        background:
-          "linear-gradient(234.318deg,rgba(145,126,132,.92) 12.773%,rgba(59,43,64,.9) 68.824%,rgb(26,20,31) 100%)",
-      }}
-    >
       <ScrollArea className="h-full">
         <div className="max-w-[1100px] mx-auto px-4 md:px-8 pt-8 md:pt-20 pb-10 md:pb-14">
 
@@ -258,7 +251,7 @@ export function SystemDesign() {
 
           {/* ── Tabs (shadcn/ui) ── */}
           <Tabs defaultValue="arch">
-            <TabsList className="mb-6 md:mb-8 h-auto p-1 gap-1 bg-white/[.06] border border-white/[.08] rounded-2xl w-full md:w-fit flex-wrap">
+            <TabsList className="mb-6 md:mb-8 h-auto p-1 gap-1 bg-white/[.06] border border-white/[.08] rounded-2xl w-full sm:w-fit flex-col sm:flex-row flex-wrap">
               {[
                 { value: "arch",       label: "Architecture" },
                 { value: "flow",       label: "Data Flow" },
@@ -267,7 +260,7 @@ export function SystemDesign() {
                 <TabsTrigger
                   key={t.value}
                   value={t.value}
-                  className="px-5 py-2 rounded-xl text-sm text-[#EAE7EC]/50 data-[state=active]:bg-white/[.14] data-[state=active]:text-white data-[state=active]:shadow-sm border-transparent data-[state=active]:border-transparent hover:text-white/80 transition-all"
+                  className="px-5 py-2.5 sm:py-2 rounded-xl text-sm w-full sm:w-auto text-[#EAE7EC]/50 data-[state=active]:bg-white/[.14] data-[state=active]:text-white data-[state=active]:shadow-sm border-transparent data-[state=active]:border-transparent hover:text-white/80 transition-all"
                 >
                   {t.label}
                 </TabsTrigger>
@@ -306,8 +299,8 @@ export function SystemDesign() {
                 {/* Steps card */}
                 <div className="rounded-[21px] p-5 md:p-8 bg-white/[.04] border border-white/[.08]">
                   <h2
-                    className="text-white mb-2"
-                    style={{ fontFamily: "Playfair Display, serif", fontSize: 26, fontWeight: 400 }}
+                    className="text-white mb-2 text-2xl md:text-[26px]"
+                    style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
                   >
                     Voice Interaction Flow
                   </h2>
@@ -344,20 +337,22 @@ export function SystemDesign() {
                     {API_CONTRACTS.map((api) => (
                       <div
                         key={api.route}
-                        className="flex items-center gap-3 p-3 rounded-[10px] bg-white/[.04] border border-white/[.06]"
+                        className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:gap-3 p-3 rounded-[10px] bg-white/[.04] border border-white/[.06]"
                       >
-                        <Badge
-                          className="shrink-0 rounded-md text-[10px] md:text-[11px] font-semibold font-mono"
-                          style={{
-                            backgroundColor: `${api.color}22`,
-                            color: api.color,
-                            border: `1px solid ${api.color}44`,
-                          }}
-                        >
-                          {api.method}
-                        </Badge>
-                        <code className="text-[#D5CFDA] text-[12px] md:text-[13px] font-mono shrink-0">{api.route}</code>
-                        <span className="text-[#EAE7EC]/45 text-[10px] md:text-xs truncate">{api.desc}</span>
+                        <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto overflow-hidden">
+                          <Badge
+                            className="shrink-0 rounded-md text-[10px] md:text-[11px] font-semibold font-mono px-2 py-0.5"
+                            style={{
+                              backgroundColor: `${api.color}22`,
+                              color: api.color,
+                              border: `1px solid ${api.color}44`,
+                            }}
+                          >
+                            {api.method}
+                          </Badge>
+                          <code className="text-[#D5CFDA] text-[11px] sm:text-[12px] md:text-[13px] font-mono shrink-0 truncate">{api.route}</code>
+                        </div>
+                        <span className="text-[#EAE7EC]/45 text-[11px] md:text-xs leading-snug break-words">{api.desc}</span>
                       </div>
                     ))}
                   </div>
@@ -455,7 +450,7 @@ export function SystemDesign() {
                           </span>
                           <span
                             className="text-white/75 leading-snug"
-                            style={{ fontSize: Math.min(t.size, 32) }}
+                            style={{ fontSize: `clamp(14px, 4vw, ${t.size}px)` }}
                           >
                             {t.label}
                           </span>
@@ -469,6 +464,5 @@ export function SystemDesign() {
           </Tabs>
         </div>
       </ScrollArea>
-    </div>
   );
 }

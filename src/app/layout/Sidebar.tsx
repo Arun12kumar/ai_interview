@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 import {
   Brain,
   MessageSquare,
@@ -10,7 +11,8 @@ import {
   Sidebar as SidebarIcon,
   Zap,
   History,
-  ChevronDown
+  ChevronDown,
+  Target
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -141,6 +143,8 @@ export function Sidebar({
   isHistoryOpen,
   setIsHistoryOpen
 }: SidebarProps) {
+  const navigate = useNavigate();
+
   return (
     <>
       {/* ── Mobile Sidebar Overlay ── */}
@@ -244,6 +248,7 @@ export function Sidebar({
                             } else {
                               setIsHistoryOpen(!isHistoryOpen);
                             }
+                            navigate("/chat");
                           }}
                           className={cn(
                             "rounded-xl transition-all h-auto",
@@ -302,6 +307,7 @@ export function Sidebar({
 
                   <NavItem icon={Archive} label="Archived" isActive={activeChat === 2} onClick={() => setActiveChat(2)} isSidebarOpen={isSidebarOpen} />
                   <NavItem icon={Library} label="Library" isActive={activeChat === 3} onClick={() => setActiveChat(3)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Target} label="System Design" isActive={activeChat === 6} onClick={() => { setActiveChat(6); navigate("/system"); }} isSidebarOpen={isSidebarOpen} />
                 </nav>
               </div>
 

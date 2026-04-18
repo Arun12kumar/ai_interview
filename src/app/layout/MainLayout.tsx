@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Sidebar } from "../layout/Sidebar";
-import { AiChatPage } from "../pages/AiChatPage";
+import { Outlet } from "react-router";
+import { Sidebar } from "./Sidebar";
+import { Header } from "./Header";
 
-export function AiChat() {
+export function MainLayout() {
   const [activeChat, setActiveChat] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(typeof window !== 'undefined' && window.innerWidth >= 768);
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
@@ -23,7 +24,12 @@ export function AiChat() {
         isHistoryOpen={isHistoryOpen}
         setIsHistoryOpen={setIsHistoryOpen}
       />
-      <AiChatPage setIsSidebarOpen={setIsSidebarOpen} />
+      <main className="flex flex-col flex-1 min-w-0 h-full overflow-hidden relative">
+        <Header setIsSidebarOpen={setIsSidebarOpen} title="Chat" />
+        <div className="flex-1 overflow-hidden relative flex flex-col">
+          <Outlet context={{ setIsSidebarOpen }} />
+        </div>
+      </main>
     </div>
   );
 }
