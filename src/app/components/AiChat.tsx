@@ -429,7 +429,7 @@ export function AiChat() {
                       )}
                     >
                       <div className="overflow-hidden">
-                        <div className="max-h-[130px] md:max-h-[35vh] overflow-y-auto w-full custom-scrollbar pr-1">
+                        <div className="max-h-[180px] md:max-h-[250px] overflow-y-auto w-full custom-scrollbar pr-1">
                           <div className="pl-3 pr-2 py-1 flex flex-col gap-3">
                             {CHAT_HISTORY.map((group, idx) => (
                               <div key={idx} className="w-full">
@@ -471,8 +471,8 @@ export function AiChat() {
                 <nav className={cn("space-y-0.5", !isSidebarOpen && "w-full flex flex-col items-center gap-1")}>
                   <NavItem icon={FolderPlus} label="New Project" isActive={activeChat === 4} onClick={() => setActiveChat(4)} isSidebarOpen={isSidebarOpen} />
                   <NavItem icon={Folder} label="Image" isActive={activeChat === 5} onClick={() => setActiveChat(5)} isSidebarOpen={isSidebarOpen} />
-                  <NavItem icon={Folder} label="Presentation" isActive={activeChat === 6} onClick={() => setActiveChat(6)} isSidebarOpen={isSidebarOpen} />
-                  <NavItem icon={Folder} label="Riset" isActive={activeChat === 7} onClick={() => setActiveChat(7)} isSidebarOpen={isSidebarOpen} />
+                  {/* <NavItem icon={Folder} label="Presentation" isActive={activeChat === 6} onClick={() => setActiveChat(6)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Folder} label="Riset" isActive={activeChat === 7} onClick={() => setActiveChat(7)} isSidebarOpen={isSidebarOpen} /> */}
                 </nav>
               </div>
             </div>
