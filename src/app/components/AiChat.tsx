@@ -109,15 +109,42 @@ function Waveform({ active }: { active: boolean }) {
 }
 
 /* ─── Stat Badge ────────────────────────────────────────────────────── */
-function StatBadge({ icon, value }: { icon: React.ReactNode; value: string }) {
+function StatBadge({ icon, value, isSidebarOpen = true }: { icon: React.ReactNode; value: string; isSidebarOpen?: boolean }) {
   return (
     <Badge
       variant="outline"
-      className="gap-1.5 px-3 py-1.5 rounded-full border-white/20 bg-white/10 text-[#EAE7EC] hover:bg-white/15 backdrop-blur-sm [&>svg]:size-3.5 cursor-default"
+      className={cn(
+        "rounded-full border-white/20 bg-white/10 text-[#EAE7EC] hover:bg-white/15 backdrop-blur-sm [&>svg]:size-3.5 cursor-default transition-all duration-300",
+        isSidebarOpen ? "gap-1.5 px-3 py-1.5" : "px-0 size-8 justify-center [&>svg]:size-[15px]"
+      )}
     >
       {icon}
-      <span className="text-[13px]">{value}</span>
+      {isSidebarOpen && <span className="text-[13px]">{value}</span>}
     </Badge>
+  );
+}
+
+function NavItem({ icon: Icon, label, isActive, onClick, isSidebarOpen }: { icon: any, label: string, isActive: boolean, onClick: () => void, isSidebarOpen: boolean }) {
+  return (
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          onClick={onClick}
+          className={cn(
+            "rounded-xl transition-all h-auto",
+            isSidebarOpen ? "w-full justify-start gap-3.5 px-4 py-2.5 text-[14px]" : "size-11 p-0 justify-center mx-auto",
+            isActive
+              ? "text-white bg-white/[.07]"
+              : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
+          )}
+        >
+          <Icon className="size-4 shrink-0 opacity-80" />
+          {isSidebarOpen && <span className="truncate font-normal">{label}</span>}
+        </Button>
+      </TooltipTrigger>
+      {!isSidebarOpen && <TooltipContent side="right">{label}</TooltipContent>}
+    </Tooltip>
   );
 }
 
@@ -188,6 +215,7 @@ function MessageBubble({ msg }: { msg: (typeof MESSAGES)[number] }) {
 export function AiChat() {
   const [activeChat, setActiveChat] = useState(1);
   const [recording, setRecording] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -202,154 +230,108 @@ export function AiChat() {
           "linear-gradient(234.318deg,rgba(145,126,132,.92) 12.773%,rgba(59,43,64,.9) 68.824%,rgb(26,20,31) 100%)",
       }}
     >
-      {/* ── Sidebar  width = 161.8 × φ ≈ 261 px ── */}
-      <aside className="flex flex-col shrink-0 h-full border-r border-white/[.08]" style={{ width: 261 }}>
-
-        {/* Logo — extra top padding so toggle pill doesn't overlap */}
-        <div className="flex items-center gap-3 px-5 pt-16 pb-5">
-          <Brain className="size-7 text-white/90 shrink-0" />
-          <span
-            className="text-white text-2xl tracking-tight"
-            style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
-          >
-            <span style={{ fontStyle: "normal" }}>AI</span>
-            <span style={{ fontStyle: "italic" }}> Interview</span>
-          </span>
-        </div>
-
-        <Separator className="mx-5 w-auto bg-white/[.08]" />
-
-        {/* New Chat */}
-        <div className="px-4 py-2">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-3 rounded-xl px-4 py-3 bg-white/[.12] text-white hover:bg-white/[.16] shadow-none h-auto transition-colors"
-          >
-            <MessageSquare className="size-[18px] opacity-80 shrink-0" />
-            <span className="font-normal text-[14.5px]">New Chat</span>
-          </Button>
-        </div>
-
-        {/* Navigation list */}
-        <ScrollArea className="flex-1 px-4 mt-2">
-          <div className="space-y-6 pb-6">
+      {/* ── Sidebar ── */}
+      <aside 
+        className={cn(
+          "flex flex-col shrink-0 h-full border-r border-white/[.08] transition-all duration-300 ease-in-out relative overflow-hidden",
+          isSidebarOpen ? "w-[261px]" : "w-[68px]"
+        )}
+      >
+        <div className={cn("flex flex-col h-full", isSidebarOpen ? "w-[261px]" : "w-[68px]")}>
+          {/* Logo — extra top padding so toggle pill doesn't overlap */}
+          <div className={cn("flex items-center pt-16 pb-5 transition-all overflow-hidden", isSidebarOpen ? "justify-between px-5" : "flex-col justify-center px-0 gap-4")}>
+            <div className={cn("flex items-center gap-3", !isSidebarOpen && "hidden")}>
+              <Brain className="size-7 text-white/90 shrink-0" />
+              <span
+                className="text-white text-2xl tracking-tight"
+                style={{ fontFamily: "Playfair Display, serif", fontWeight: 400 }}
+              >
+                <span style={{ fontStyle: "normal" }}>AI</span>
+                <span style={{ fontStyle: "italic" }}> Interview</span>
+              </span>
+            </div>
             
-            {/* Features */}
-            <div>
-              <div className="px-4 pb-2 text-[12px] font-medium text-white/40 tracking-wide uppercase">
-                Features
-              </div>
-              <nav className="space-y-0.5">
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveChat(1)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 1
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
-                >
-                  <MessageSquare className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">Chat</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveChat(2)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 2
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
-                >
-                  <Archive className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">Archived</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveChat(3)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 3
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
-                >
-                  <Library className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">Library</span>
-                </Button>
-              </nav>
-            </div>
+            {!isSidebarOpen && (
+              <Brain className="size-7 text-white/90 shrink-0" />
+            )}
 
-            {/* Workspaces */}
-            <div>
-              <div className="px-4 pb-2 text-[12px] font-medium text-white/40 tracking-wide uppercase">
-                Workspaces
-              </div>
-              <nav className="space-y-0.5">
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  onClick={() => setActiveChat(4)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 4
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
+                  size="icon"
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="size-8 text-white/50 hover:text-white hover:bg-white/10 rounded-md shrink-0"
                 >
-                  <FolderPlus className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">New Project</span>
+                  <Sidebar className="size-4.5" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveChat(5)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 5
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
-                >
-                  <Folder className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">Image</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveChat(6)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 6
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
-                >
-                  <Folder className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">Presentation</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveChat(7)}
-                  className={cn(
-                    "w-full justify-start gap-3.5 rounded-xl px-4 py-2.5 text-[14px] transition-all h-auto",
-                    activeChat === 7
-                      ? "text-white bg-white/[.07]"
-                      : "text-white/60 hover:bg-white/[.07] hover:text-white/90"
-                  )}
-                >
-                  <Folder className="size-4 shrink-0 opacity-80" />
-                  <span className="truncate font-normal">Riset</span>
-                </Button>
-              </nav>
-            </div>
+              </TooltipTrigger>
+              {!isSidebarOpen && <TooltipContent side="right">Expand</TooltipContent>}
+            </Tooltip>
           </div>
-        </ScrollArea>
 
-        {/* Stats */}
-        <div className="flex items-center gap-2 px-5 py-5 mt-auto">
-          <StatBadge icon={<Brain />} value="0" />
-          <StatBadge icon={<Zap />} value="12" />
-          <StatBadge icon={<MessageSquare />} value="10" />
+          <Separator className={cn("bg-white/[.08] transition-all", isSidebarOpen ? "mx-5 w-auto" : "mx-auto w-8")} />
+
+          {/* New Chat */}
+          <div className={cn("py-2", isSidebarOpen ? "px-4" : "px-0 flex justify-center")}>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "rounded-xl bg-white/[.12] text-white hover:bg-white/[.16] shadow-none transition-all",
+                    isSidebarOpen ? "w-full justify-start gap-3 px-4 py-3 h-auto" : "justify-center p-0 size-[44px]"
+                  )}
+                >
+                  <MessageSquare className={cn("opacity-80 shrink-0", isSidebarOpen ? "size-[18px]" : "size-5")} />
+                  {isSidebarOpen && <span className="font-normal text-[14.5px]">New Chat</span>}
+                </Button>
+              </TooltipTrigger>
+              {!isSidebarOpen && <TooltipContent side="right">New Chat</TooltipContent>}
+            </Tooltip>
+          </div>
+
+          {/* Navigation list */}
+          <ScrollArea className={cn("flex-1 mt-2", isSidebarOpen ? "px-4" : "px-0")}>
+            <div className={cn("pb-6", isSidebarOpen ? "space-y-6" : "space-y-4 flex flex-col items-center")}>
+              
+              {/* Features */}
+              <div className={cn(!isSidebarOpen && "w-full flex flex-col items-center")}>
+                {isSidebarOpen && (
+                  <div className="px-4 pb-2 text-[12px] font-medium text-white/40 tracking-wide uppercase">
+                    Features
+                  </div>
+                )}
+                <nav className={cn("space-y-0.5", !isSidebarOpen && "w-full flex flex-col items-center gap-1")}>
+                  <NavItem icon={MessageSquare} label="Chat" isActive={activeChat === 1} onClick={() => setActiveChat(1)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Archive} label="Archived" isActive={activeChat === 2} onClick={() => setActiveChat(2)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Library} label="Library" isActive={activeChat === 3} onClick={() => setActiveChat(3)} isSidebarOpen={isSidebarOpen} />
+                </nav>
+              </div>
+
+              {/* Workspaces */}
+              <div className={cn(!isSidebarOpen && "w-full flex flex-col items-center")}>
+                {isSidebarOpen && (
+                  <div className="px-4 pb-2 text-[12px] font-medium text-white/40 tracking-wide uppercase">
+                    Workspaces
+                  </div>
+                )}
+                <nav className={cn("space-y-0.5", !isSidebarOpen && "w-full flex flex-col items-center gap-1")}>
+                  <NavItem icon={FolderPlus} label="New Project" isActive={activeChat === 4} onClick={() => setActiveChat(4)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Folder} label="Image" isActive={activeChat === 5} onClick={() => setActiveChat(5)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Folder} label="Presentation" isActive={activeChat === 6} onClick={() => setActiveChat(6)} isSidebarOpen={isSidebarOpen} />
+                  <NavItem icon={Folder} label="Riset" isActive={activeChat === 7} onClick={() => setActiveChat(7)} isSidebarOpen={isSidebarOpen} />
+                </nav>
+              </div>
+            </div>
+          </ScrollArea>
+
+          {/* Stats */}
+          <div className={cn("flex gap-2 py-5 mt-auto", isSidebarOpen ? "px-5 items-center" : "flex-col items-center px-0")}>
+            <StatBadge icon={<Brain />} value="0" isSidebarOpen={isSidebarOpen} />
+            <StatBadge icon={<Zap />} value="12" isSidebarOpen={isSidebarOpen} />
+            <StatBadge icon={<MessageSquare />} value="10" isSidebarOpen={isSidebarOpen} />
+          </div>
         </div>
       </aside>
 
