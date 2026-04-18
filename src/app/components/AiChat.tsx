@@ -239,7 +239,7 @@ export function AiChat() {
       >
         <div className={cn("flex flex-col h-full", isSidebarOpen ? "w-[261px]" : "w-[68px]")}>
           {/* Logo — extra top padding so toggle pill doesn't overlap */}
-          <div className={cn("flex items-center pt-16 pb-5 transition-all overflow-hidden", isSidebarOpen ? "justify-between px-5" : "flex-col justify-center px-0 gap-4")}>
+          <div className={cn("flex items-center pt-5 pb-5 transition-all overflow-hidden", isSidebarOpen ? "justify-between px-5" : "flex-col justify-center px-0 gap-4")}>
             <div className={cn("flex items-center gap-3", !isSidebarOpen && "hidden")}>
               <Brain className="size-7 text-white/90 shrink-0" />
               <span
@@ -251,9 +251,9 @@ export function AiChat() {
               </span>
             </div>
             
-            {!isSidebarOpen && (
+            {/* {!isSidebarOpen && (
               <Brain className="size-7 text-white/90 shrink-0" />
-            )}
+            )} */}
 
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
@@ -339,7 +339,7 @@ export function AiChat() {
       <main className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
 
         {/* Header — extra top padding so toggle pill clears */}
-        <header className="flex items-center gap-2 px-8 pt-14 pb-5">
+        <header className="flex items-center gap-2 px-8 pt-5 pb-5">
           <Button
             variant="ghost"
             className="gap-2 px-1 text-white hover:bg-white/10 group"

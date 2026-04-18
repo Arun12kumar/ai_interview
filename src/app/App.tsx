@@ -13,7 +13,7 @@ export default function App() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* ── Floating top-centre view toggle ─────────────────────────── */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 p-1 rounded-xl border border-white/20 bg-black/40 backdrop-blur-md shadow-lg">
+      {/* <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 p-1 rounded-xl border border-white/20 bg-black/40 backdrop-blur-md shadow-lg">
         <Button
           size="sm"
           onClick={() => setView("chat")}
@@ -40,7 +40,7 @@ export default function App() {
           <Layers className="size-3.5" />
           System Design
         </Button>
-      </div>
+      </div> */}
 
       {/* ── Chat view ───────────────────────────────────────────────── */}
       <div
