@@ -81,30 +81,39 @@ export function Header({ setIsSidebarOpen, title = "Chat" }: HeaderProps) {
         </Tooltip>
 
         {/* User Profile Pill */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div
-              role="button"
-              className="flex items-center gap-2 sm:gap-3 p-1 sm:pr-4 pr-1 bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] transition-colors rounded-full cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-white/20"
-              style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
-            >
-              <div className="size-[30px] rounded-full overflow-hidden border border-white/20 bg-white/10 shrink-0 flex items-center justify-center">
-                <User className="size-4.5 text-white/90" />
+        {/* User Profile Pill - Desktop (No Dropdown) */}
+        <div className="hidden sm:flex items-center gap-3 p-1 pr-4 bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] transition-colors rounded-full shadow-sm">
+          <div className="size-[30px] rounded-full overflow-hidden border border-white/20 bg-white/10 shrink-0 flex items-center justify-center">
+            <User className="size-4.5 text-white/90" />
+          </div>
+          <div className="flex flex-col justify-center">
+            <span className="text-[13px] font-medium text-white/90 leading-tight">arun@ai-interview.io</span>
+            <span className="text-[11px] text-white/50 leading-tight">Administrator</span>
+          </div>
+        </div>
+
+        {/* User Profile Pill - Mobile (With Dropdown) */}
+        <div className="sm:hidden flex">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div
+                role="button"
+                className="flex items-center p-1 bg-white/[.05] border border-white/[.08] hover:bg-white/[.09] transition-colors rounded-full cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-white/20"
+                style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+              >
+                <div className="size-[30px] rounded-full overflow-hidden border border-white/20 bg-white/10 shrink-0 flex items-center justify-center">
+                  <User className="size-4.5 text-white/90" />
+                </div>
               </div>
-              <div className="flex-col justify-center hidden sm:flex">
-                <span className="text-[13px] font-medium text-white/90 leading-tight">arun@ai-interview.io</span>
-                <span className="text-[11px] text-white/50 leading-tight">Administrator</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px] border border-white/[.08] bg-[#1d1721]/70 backdrop-blur-md text-white rounded-[13px] shadow-xl">
+              <div className="px-3 py-2.5">
+                <p className="text-[13px] font-medium text-white/90">arun@ai-interview.io</p>
+                <p className="text-[11px] text-white/50 mt-0.5">Administrator</p>
               </div>
-              <ChevronDown className="size-3.5 text-white/40 hidden sm:block shrink-0" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[200px] border-white/10 bg-[#1d1721] text-white rounded-[13px] shadow-xl">
-            <div className="px-3 py-2.5 sm:hidden">
-              <p className="text-[13px] font-medium text-white/90">arun@ai-interview.io</p>
-              <p className="text-[11px] text-white/50 mt-0.5">Administrator</p>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

@@ -216,10 +216,10 @@ export function Sidebar({
                   )}
                 >
                   <MessageSquarePlus className={cn("opacity-80 shrink-0", isSidebarOpen ? "size-[18px]" : "size-5")} />
-                  {isSidebarOpen && <span className="font-normal text-[14.5px]">New Chat</span>}
+                  {isSidebarOpen && <span className="font-normal text-[14.5px]">New Interview</span>}
                 </Button>
               </TooltipTrigger>
-              {!isSidebarOpen && <TooltipContent side="right">New Chat</TooltipContent>}
+              {!isSidebarOpen && <TooltipContent side="right">New Interview</TooltipContent>}
             </Tooltip>
           </div>
 
