@@ -23,15 +23,6 @@ export default function App() {
         <AiChat />
       </div>
 
-      {/* ── System Design view ──────────────────────────────────────── */}
-      <div
-        className={cn(
-          "absolute inset-0 transition-opacity duration-300",
-          view === "system" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}
-      >
-        <SystemDesign />
-      </div>
     </div>
   );
 }
